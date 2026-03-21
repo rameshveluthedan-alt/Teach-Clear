@@ -1,0 +1,67 @@
+### Chapter: Integers
+
+## Beyond Whole Numbers
+
+Numbers extend beyond 0:
+- positive numbers (+)
+- negative numbers (−)
+
+---
+
+## Number Line
+
+Numbers exist:
+… −3, −2, −1, 0, 1, 2, 3 …
+
+Left of 0 → negative  
+Right of 0 → positive  
+
+---
+
+## Integers
+
+Integers include:
+- positive numbers
+- negative numbers
+- zero
+
+---
+
+## Real-Life Meaning
+
+Examples:
+- floors in a building
+- temperature
+- money gain/loss
+
+---
+
+## Addition of Integers
+
+Movement idea:
++ → move right/up  
+− → move left/down  
+
+---
+
+## Opposites (Inverse)
+
++3 and −3 cancel each other
+
+(+3) + (−3) = 0
+
+---
+
+## Comparing Integers
+
+- Positive > 0  
+- Negative < 0  
+- −5 < −3  
+
+---
+
+## Key Takeaways
+
+- Integers include negative numbers
+- Number line helps understanding
+- Opposites cancel each other

@@ -1,0 +1,15 @@
+Polling Vs Webhook
+
+Need for Flask - landing page
+
+
+GIT
+Step 1 — Create the repo on GitHub
+Go to github.com → click New repository → give it a name (e.g. teachclear) → set it to Private (since your .env path is in the project) → do not check "Add a README" or "Add .gitignore" — you already have your own.
+Step 2 — Run these in your VS Code terminal one by one
+git init
+git add .
+git commit -m "Initial commit — TeachClear MVP"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/teachclear.git
+git push -u origin main

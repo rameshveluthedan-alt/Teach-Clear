@@ -1,0 +1,64 @@
+### Chapter: Fractions
+
+## What is a Fraction?
+
+A fraction represents equal parts of a whole.
+
+Example:
+1/2 → half  
+1/4 → one-fourth
+
+---
+
+## Fraction as Equal Share
+
+If 1 roti is shared among:
+2 people → each gets 1/2  
+4 people → each gets 1/4  
+
+More people → smaller share
+
+---
+
+## Unit Fractions
+
+Fractions with numerator 1:
+1/2, 1/3, 1/4...
+
+---
+
+## Comparing Fractions
+
+Important idea:
+Smaller denominator → larger share (for unit fractions)
+
+Example:
+1/2 > 1/4
+
+---
+
+## Fraction as Part of Whole
+
+Whole can be divided in many ways but equal parts are important.
+
+---
+
+## Fractions on Number Line
+
+Fractions can be placed between numbers:
+0 --- 1/2 --- 1
+
+---
+
+## Key Terms
+
+Numerator → top number  
+Denominator → bottom number  
+
+---
+
+## Key Takeaways
+
+- Fractions represent parts of a whole
+- Equal division is important
+- Helps measure and compare quantities

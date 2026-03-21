@@ -1,0 +1,77 @@
+### Chapter: Data Handling and Presentation
+
+## What is Data?
+Data is a collection of facts, numbers, observations, or information.
+
+Examples:
+- Favourite games of students
+- Heights or weights of students
+- Survey responses
+
+---
+
+## Collecting Data
+
+To answer questions like “most popular game”, we must:
+- Ask people (survey)
+- Record responses
+
+---
+
+## Organising Data
+
+Raw data is difficult to interpret.
+
+We organise data using:
+- Lists
+- Tables
+- Tally marks
+
+---
+
+## Tally Marks
+
+Tally marks help count easily:
+- Every 5th mark crosses previous four
+- Helps quick counting
+
+---
+
+## Frequency
+
+The number of times a value appears is called frequency.
+
+Example:
+- 6 students like jalebi → frequency = 6
+
+---
+
+## Arranging Data
+
+Data can be arranged:
+- Ascending order
+- Descending order
+
+Helps identify:
+- smallest value
+- largest value
+- patterns
+
+---
+
+## Pictographs
+
+Pictographs represent data using symbols or pictures.
+
+Features:
+- Easy to understand
+- Visual comparison
+- Each symbol represents a number
+
+---
+
+## Key Takeaways
+
+- Data helps answer real-world questions
+- Organisation improves understanding
+- Visual representation makes interpretation easier

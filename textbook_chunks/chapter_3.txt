@@ -1,0 +1,109 @@
+### Chapter: Number Play
+
+## Use of Numbers
+
+Numbers help:
+- Count
+- Measure
+- Compare
+- Solve real-life problems
+
+---
+
+## Numbers and Meaning
+
+Numbers can represent:
+- Position
+- Relationships
+- Patterns
+
+Example:
+Children in a line use numbers to describe taller neighbours.
+
+---
+
+## Supercells
+
+A supercell is a number that is:
+- Greater than all adjacent numbers
+
+Used to identify patterns in grids.
+
+---
+
+## Number Line
+
+Numbers are placed in order on a number line.
+
+Helps:
+- Compare numbers
+- Understand magnitude
+
+---
+
+## Playing with Digits
+
+Digit-based patterns include:
+- Digit sums
+- Place value patterns
+
+Example:
+Different numbers can have the same digit sum.
+
+---
+
+## Palindromes
+
+Palindromes:
+- Read the same forwards and backwards
+
+Examples:
+121, 848, 1111
+
+---
+
+## Kaprekar Constant (6174)
+
+Process:
+1. Rearrange digits
+2. Subtract smallest from largest
+3. Repeat
+
+Result:
+→ Always reaches 6174 (for 4-digit numbers)
+
+---
+
+## Estimation
+
+Estimation helps:
+- Approximate values
+- Make quick decisions
+
+---
+
+## Number Patterns
+
+Patterns appear in:
+- Sequences
+- Arrangements
+- Operations
+
+---
+
+## Collatz Conjecture
+
+Rule:
+- Even → divide by 2
+- Odd → multiply by 3 and add 1
+
+Observation:
+→ Sequence eventually reaches 1
+
+---
+
+## Key Takeaways
+
+- Numbers reveal patterns
+- Mathematical thinking involves exploration
+- Many patterns are still unsolved

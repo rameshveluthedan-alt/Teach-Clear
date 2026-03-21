@@ -1,0 +1,53 @@
+### Chapter: Playing with Constructions
+
+## Drawing with Compass
+
+A compass is used to:
+- draw circles
+- measure equal distances
+
+---
+
+## Circle
+
+A circle is formed by all points at equal distance from a centre.
+
+Centre → fixed point  
+Radius → distance from centre
+
+---
+
+## Construction Basics
+
+Using ruler and compass:
+- draw lines
+- draw circles
+- create patterns
+
+---
+
+## Squares and Rectangles
+
+Rectangle:
+- opposite sides equal
+- all angles 90°
+
+Square:
+- all sides equal
+- all angles 90°
+
+---
+
+## Rotation
+
+Rotating a shape does not change:
+- side lengths
+- angles
+
+---
+
+## Key Takeaways
+
+- Compass helps create accurate figures
+- Geometry depends on properties of shapes
+- Shapes remain same even when rotated

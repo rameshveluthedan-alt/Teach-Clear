@@ -1,0 +1,84 @@
+### Chapter: Patterns in Mathematics
+
+## What is Mathematics?
+Mathematics is the study of patterns and understanding why those patterns exist.
+
+Patterns are found everywhere:
+- Nature
+- Daily activities (shopping, cooking, games)
+- Technology and science
+
+Mathematics helps explain these patterns and apply them in real life.
+
+---
+
+## Patterns in Numbers
+
+Number patterns include sequences such as:
+
+- Counting numbers: 1, 2, 3, 4...
+- Odd numbers: 1, 3, 5, 7...
+- Even numbers: 2, 4, 6, 8...
+- Square numbers: 1, 4, 9, 16...
+- Cube numbers: 1, 8, 27...
+- Triangular numbers: 1, 3, 6, 10...
+
+Number theory studies patterns in numbers.
+
+---
+
+## Visualising Number Patterns
+
+Number patterns can be shown using pictures.
+
+Examples:
+- Square numbers → arranged in square shapes
+- Triangular numbers → arranged in triangle shapes
+
+Visualisation helps understand concepts better.
+
+---
+
+## Relations Among Number Patterns
+
+Patterns can be related.
+
+Example:
+Sum of odd numbers:
+1 = 1  
+1 + 3 = 4  
+1 + 3 + 5 = 9  
+1 + 3 + 5 + 7 = 16  
+
+Observation:
+→ Sum of first n odd numbers = n² (square numbers)
+
+---
+
+## Patterns in Shapes
+
+Patterns also exist in shapes (geometry).
+
+Examples:
+- Triangles
+- Squares
+- Polygons
+- Graphs
+
+---
+
+## Relation Between Shapes and Numbers
+
+Example:
+- Number of sides of polygons: 3, 4, 5, 6...
+
+Shape patterns often connect with number patterns.
+
+---
+
+## Key Takeaways
+
+- Mathematics is about patterns and explanations
+- Number sequences are fundamental
+- Visualisation helps understanding
+- Shape and number patterns are connected

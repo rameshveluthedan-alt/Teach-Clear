@@ -1,0 +1,67 @@
+### Chapter: Prime Time
+
+## Multiples
+
+Multiples are numbers obtained by multiplying a number.
+
+Example:
+Multiples of 3 → 3, 6, 9, 12...
+
+---
+
+## Common Multiples
+
+Common multiples are shared multiples of two numbers.
+
+Example:
+Multiples of 3 → 3, 6, 9...
+Multiples of 5 → 5, 10, 15...
+Common multiple → 15
+
+---
+
+## Factors
+
+Factors are numbers that divide another number exactly.
+
+Example:
+Factors of 24 → 1, 2, 3, 4, 6, 8, 12, 24
+
+---
+
+## Common Factors
+
+Numbers that are factors of two or more numbers.
+
+Example:
+Factors of 14 → 1, 2, 7, 14  
+Factors of 36 → 1, 2, 3, 4, 6...  
+Common factors → 1, 2
+
+---
+
+## Prime Numbers
+
+A prime number has exactly two factors:
+- 1 and itself
+
+Examples:
+2, 3, 5, 7, 11...
+
+---
+
+## Composite Numbers
+
+Numbers with more than two factors.
+
+Examples:
+4, 6, 8, 9...
+
+---
+
+## Key Takeaways
+
+- Multiples → repeated addition
+- Factors → exact division
+- Prime numbers → only two factors
+- Common factors and multiples help solve problems

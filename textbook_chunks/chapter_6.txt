@@ -1,0 +1,44 @@
+### Chapter: Perimeter and Area
+
+## Perimeter
+
+Perimeter is the total distance around a shape.
+
+---
+
+## Perimeter of Shapes
+
+Rectangle:
+Perimeter = 2 × (length + breadth)
+
+Square:
+Perimeter = 4 × side
+
+Triangle:
+Perimeter = sum of all sides
+
+---
+
+## Real-Life Use
+
+Perimeter is used in:
+- fencing fields
+- measuring boundaries
+- calculating distance travelled
+
+---
+
+## Example Thinking
+
+If a rectangle has:
+length = 3 m, breadth = 2 m
+
+Perimeter = 2 × (3 + 2) = 10 m
+
+---
+
+## Key Takeaways
+
+- Perimeter measures boundary length
+- Add all sides to find perimeter
+- Used in real-life situations

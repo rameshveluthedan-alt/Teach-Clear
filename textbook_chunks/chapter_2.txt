@@ -1,0 +1,105 @@
+### Chapter: Lines and Angles
+
+## Basic Concepts
+
+Geometry studies shapes and their properties.
+
+Key elements:
+- Point
+- Line
+- Line segment
+- Ray
+- Angle
+
+---
+
+## Point
+
+A point represents an exact location.
+
+Properties:
+- No length, breadth, or height
+
+Examples:
+- Tip of a pencil
+- Dot on paper
+
+---
+
+## Line Segment
+
+A line segment:
+- Has two endpoints
+- Is the shortest distance between two points
+
+---
+
+## Line
+
+A line:
+- Extends infinitely in both directions
+- Has no endpoints
+
+---
+
+## Ray
+
+A ray:
+- Starts at one point
+- Extends infinitely in one direction
+
+---
+
+## Angle
+
+An angle is formed by two rays with a common starting point.
+
+Parts:
+- Vertex (common point)
+- Arms (two rays)
+
+---
+
+## Size of an Angle
+
+Angle size depends on rotation.
+
+More rotation → larger angle
+
+---
+
+## Types of Angles
+
+- Acute angle: less than 90°
+- Right angle: exactly 90°
+- Obtuse angle: between 90° and 180°
+- Straight angle: 180°
+
+---
+
+## Measuring Angles
+
+Angles are measured in degrees (°).
+
+- Full turn = 360°
+- Straight angle = 180°
+- Right angle = 90°
+
+Tool used:
+- Protractor
+
+---
+
+## Comparing Angles
+
+Angles can be compared by:
+- Superimposition (placing one over another)
+- Rotation comparison
+
+---
+
+## Key Takeaways
+
+- Angles measure rotation
+- Geometry builds from simple concepts
+- Angles are classified based on size

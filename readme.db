@@ -1,0 +1,190 @@
+# 📐 TeachClear
+
+> An AI-powered Telegram bot that helps Grade 6 Mathematics teachers in Indian classrooms — grounded in the NCERT textbook Ganita Prakash (2024 edition).
+
+---
+
+## 🎯 What is TeachClear?
+
+TeachClear is a teaching support tool, not a student homework solver. It is designed for **teachers** who want practical, curriculum-aligned guidance on how to teach a topic — including concept explanations, step-by-step classroom approaches, low-resource activities, common student misconceptions, and actionable tips.
+
+Every response is grounded in the actual textbook content. TeachClear will not answer from general knowledge — if the topic is not in the selected chapter, it says so.
+
+---
+
+## ✨ Features
+
+- 🌐 **Multilingual** — supports Tamil, Hindi, Telugu, and Kannada
+- 📚 **Chapter selection** — teachers pick a chapter from an inline menu; responses are grounded in that chapter's textbook content
+- 🔀 **Switch chapters anytime** — use `/chapter` without restarting
+- 📖 **Structured responses** — every answer follows a consistent 5-section format
+- ✅ **Curriculum-aligned** — built on Ganita Prakash, NCERT Grade 6 Maths (2024)
+- 🚫 **Anti-hallucination** — Gemini is explicitly instructed not to answer outside provided textbook context
+
+---
+
+## 📋 Response Format
+
+Every TeachClear response follows this structure:
+
+| Section | What it contains |
+|---|---|
+| 📖 Concept Overview | 3–5 sentences explaining the concept as it appears in the textbook |
+| 🪜 Step-by-Step Teaching | Numbered steps a teacher can follow in class |
+| 🎯 Classroom Activity | One low-resource or no-resource activity |
+| ⚠️ Common Misconceptions | Typical student errors and how to address them |
+| 💡 Teacher Tips | Practical advice on pacing, differentiation, and real-life connections |
+
+---
+
+## 📚 Supported Chapters
+
+TeachClear covers all 10 chapters of Ganita Prakash (NCERT Grade 6, 2024):
+
+| # | Chapter |
+|---|---------|
+| 1 | Patterns in Mathematics |
+| 2 | Lines and Angles |
+| 3 | Number Play |
+| 4 | Data Handling and Presentation |
+| 5 | Prime Time |
+| 6 | Perimeter and Area |
+| 7 | Fractions |
+| 8 | Playing with Constructions |
+| 9 | Symmetry |
+| 10 | The Other Side of Zero |
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+|---|---|
+| 🤖 Bot framework | [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI) |
+| 🧠 LLM | Google Gemini (`gemini-2.0-flash`) via `google-genai` |
+| 🔍 RAG | Prompt-based — keyword scoring over `.txt` chapter files |
+| 🐍 Language | Python 3.10+ |
+
+---
+
+## 🗂️ Project Structure
+
+```
+teachclear/
+│
+├── TeachClear.py          # Bot entry point — Telegram handlers, session state, formatting
+├── rag.py                 # Retrieves relevant textbook content for a query
+├── prompts.py             # Builds the Gemini prompt for each teacher query
+├── metadata.py            # Chapter metadata, keywords, and UI strings in all 5 languages
+│
+├── textbook_chunks/       # One .txt file per chapter (chapter_1.txt … chapter_10.txt)
+│   ├── chapter_1.txt
+│   ├── chapter_2.txt
+│   └── ...
+│
+├── requirements.txt
+├── .env                   # API keys — never committed (see .gitignore)
+├── .env.example           # Template for setting up your own .env
+└── .gitignore
+```
+
+---
+
+## 🚀 Setup
+
+### 1️⃣ Clone the repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/teachclear.git
+cd teachclear
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3️⃣ Set up environment variables
+
+Copy the example file and fill in your keys:
+
+```bash
+cp .env.example .env
+```
+
+Your `.env` should contain:
+
+```
+TELEGRAM_TOKEN=your_telegram_bot_token
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.0-flash
+```
+
+- 🤖 Get your Telegram token from [@BotFather](https://t.me/BotFather)
+- 🔑 Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+
+### 4️⃣ Add textbook chapters
+
+Place your chapter text files in `textbook_chunks/`, named exactly:
+
+```
+chapter_1.txt
+chapter_2.txt
+...
+chapter_10.txt
+```
+
+### 5️⃣ Run the bot
+
+```bash
+python TeachClear.py
+```
+
+---
+
+## 💬 How to Use
+
+1. 🔍 Open Telegram and search for your bot
+2. 👋 Send `/start`
+3. 🌐 Pick your language from the inline buttons
+4. 📚 Pick a chapter from the list (shown in your chosen language)
+5. ✏️ Type your teaching question — TeachClear responds in the language you selected
+6. 🔀 Use `/chapter` anytime to switch to a different chapter
+
+---
+
+## 📜 Textbook Attribution
+
+Textbook content is sourced from:
+
+> Ganita Prakash, Grade 6 Mathematics
+> National Council of Educational Research and Training (NCERT), 2024 edition (Reprint 2025-26)
+> Used for educational, non-commercial purposes.
+
+📖 NCERT textbooks are freely available at [ncert.nic.in](https://ncert.nic.in).
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Some areas where help would be valuable:
+
+- 🔑 Improving keyword lists in `metadata.py` for better chapter matching
+- 🌐 Reviewing translations of chapter titles and UI strings for accuracy
+- 🗣️ Adding support for more Indian languages
+- 📄 Improving the textbook `.txt` files for richer context
+
+Please open an issue before submitting a large pull request.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] 🌐 Web interface (Streamlit or FastAPI)
+- [ ] 📚 Support for other NCERT grade levels
+- [ ] 🔍 Vector-based RAG (FAISS or ChromaDB) for finer retrieval within chapters
+- [ ] 📊 Usage analytics for school administrators
+- [ ] 📶 Offline mode for low-connectivity classrooms
+
+---
