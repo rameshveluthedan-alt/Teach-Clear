@@ -415,7 +415,7 @@ def handle_mismatch_decision(call: telebot.types.CallbackQuery) -> None:
         call_gemini_and_respond(chat_id, pending["query"], chapter_to_use, lang)
     except Exception as e:
         logger.error("Error after mismatch decision: %s", e, exc_info=True)
-        bot.send_message(chat_id, "⚠️ Something went wrong. Please try again.")
+        bot.send_message(chat_id, "⚠️ AI is busy right now. Please try again in a moment.")
 
 
 # ── Message handler ────────────────────────────────────────────────────────────
