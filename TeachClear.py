@@ -1,31 +1,28 @@
 # TeachClear.py
 # -------------
 # Telegram bot for TeachClear — Grade 6 Mathematics teaching assistant.
-# Uses pyTelegramBotAPI (telebot) — synchronous polling.
+# Uses Flask webhook mode for Cloud Run deployment.
 # Gemini API via the google-genai SDK.
 #
-# USER FLOW:
-#   /start    →  language picker → chapter list → teacher types query → Gemini responds
-#   /chapter  →  chapter list again (switch anytime)
-#   /help     →  how to use TeachClear
-#   /examples →  example questions across all chapters
+# WEBHOOK MODE:
+#   Telegram sends messages to POST /webhook
+#   Flask processes the update and replies
+#   Cloud Run wakes up on each request and sleeps after
 #
-# MISMATCH DETECTION:
-#   If teacher's question keywords match a different chapter than the one selected,
-#   bot warns and offers two inline buttons:
-#     [Answer from detected chapter — permanently switches session]
-#     [Answer from selected chapter — keeps current session]
-#
-# Required environment variables in .env:
-#   TELEGRAM_TOKEN   — from @BotFather on Telegram
-#   GEMINI_API_KEY   — from https://aistudio.google.com/app/apikey
+# Required environment variables:
+#   TELEGRAM_TOKEN    — from @BotFather on Telegram
+#   GEMINI_API_KEY    — from https://aistudio.google.com/app/apikey
+#   WEBHOOK_URL       — your Cloud Run service URL (set after first deploy)
+#                       e.g. https://teach-clear-xxxx-el.a.run.app
+#   GEMINI_MODEL      — optional, defaults to gemini-2.0-flash
 
 import os
 import logging
 from dotenv import load_dotenv
 
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, Update
+from flask import Flask, request, abort
 from google import genai
 
 from rag import get_relevant_context, _find_chapter_by_keywords
@@ -33,7 +30,6 @@ from prompts import build_prompt
 from metadata import (
     CHAPTER_METADATA,
     LANGUAGES,
-    LANGUAGE_PICKER_PROMPT,
     CHAPTER_SELECTED_MSG,
     SWITCH_CHAPTER_MSG,
     READY_PROMPT,
@@ -53,20 +49,22 @@ logger = logging.getLogger(__name__)
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
+WEBHOOK_URL    = os.getenv("WEBHOOK_URL", "").rstrip("/")
+PORT           = int(os.getenv("PORT", "8080"))  # Cloud Run always uses 8080
 
 if not TELEGRAM_TOKEN:
-    raise EnvironmentError("TELEGRAM_TOKEN is missing from your .env file.")
+    raise EnvironmentError("TELEGRAM_TOKEN is missing.")
 if not GEMINI_API_KEY:
-    raise EnvironmentError("GEMINI_API_KEY is missing from your .env file.")
+    raise EnvironmentError("GEMINI_API_KEY is missing.")
 
 bot           = telebot.TeleBot(TELEGRAM_TOKEN)
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+app           = Flask(__name__)
 
 
 # ── Session state ──────────────────────────────────────────────────────────────
-# { chat_id: { "lang": "ta", "chapter": <chapter_dict>, "pending": <state> } }
-# "pending" stores a mismatch state while waiting for teacher's decision:
-# { "query": str, "selected": chapter_dict, "detected": chapter_dict }
+# In-memory session store — resets on container restart (fine for MVP)
+# { chat_id: { "lang": "ta", "chapter": <dict>, "pending": <dict> } }
 user_sessions: dict[int, dict] = {}
 
 def get_session(chat_id: int) -> dict:
@@ -105,13 +103,13 @@ TeachClear helps Grade 6 Maths teachers with curriculum-aligned teaching support
 /help — show this message
 /examples — see example questions to try
 
-<b>Note:</b> TeachClear responds only based on the NCERT Ganita Prakash textbook content. It will not answer questions outside the Grade 6 curriculum.
+<b>Note:</b> TeachClear responds only based on the NCERT Ganita Prakash textbook content.
 """
 
 EXAMPLES_TEXT = """
 💡 <b>Example questions to try</b>
 
-Here are some questions you can ask TeachClear — pick any chapter first, then try a question from that chapter!
+Pick a chapter first, then try a question from that chapter!
 
 📘 <b>Ch 1 — Patterns in Mathematics</b>
 → How do I introduce triangular numbers to students visually?
@@ -175,7 +173,6 @@ def chapter_keyboard(lang: str) -> InlineKeyboardMarkup:
 
 
 def mismatch_keyboard(detected_n: int, selected_n: int) -> InlineKeyboardMarkup:
-    """Two buttons shown when a chapter mismatch is detected."""
     kb = InlineKeyboardMarkup(row_width=1)
     kb.add(
         InlineKeyboardButton(
@@ -183,7 +180,7 @@ def mismatch_keyboard(detected_n: int, selected_n: int) -> InlineKeyboardMarkup:
             callback_data=f"mismatch:switch:{detected_n}",
         ),
         InlineKeyboardButton(
-            f"📖 Answer using Chapter {selected_n} (current)",
+            f"📖 Ask a question on Chapter {selected_n} instead",
             callback_data=f"mismatch:keep:{selected_n}",
         ),
     )
@@ -200,7 +197,6 @@ SECTION_CONFIG = {
 }
 
 def format_response(raw_text: str, chapter_info: dict | None, lang: str) -> str:
-    """Parses SECTION: markers from Gemini output and returns clean Telegram HTML."""
     if chapter_info:
         title  = get_title(chapter_info, lang)
         header = f"📚 <b>Chapter {chapter_info['chapter']}: {title}</b>"
@@ -257,8 +253,12 @@ def send_long_message(chat_id: int, text: str) -> None:
 
 
 # ── Gemini call ────────────────────────────────────────────────────────────────
-def call_gemini_and_respond(chat_id: int, user_query: str, chapter: dict, lang: str) -> None:
-    """Retrieves context, calls Gemini, formats and sends the response."""
+def call_gemini_and_respond(
+    chat_id: int,
+    user_query: str,
+    chapter: dict,
+    lang: str,
+) -> None:
     context_text, chapter_info = get_relevant_context(
         user_query, forced_chapter=chapter
     )
@@ -271,7 +271,7 @@ def call_gemini_and_respond(chat_id: int, user_query: str, chapter: dict, lang: 
     send_long_message(chat_id, formatted)
 
 
-# ── /start ─────────────────────────────────────────────────────────────────────
+# ── Bot handlers ───────────────────────────────────────────────────────────────
 @bot.message_handler(commands=["start"])
 def handle_start(message: telebot.types.Message) -> None:
     chat_id = message.chat.id
@@ -286,7 +286,6 @@ def handle_start(message: telebot.types.Message) -> None:
     )
 
 
-# ── /chapter ───────────────────────────────────────────────────────────────────
 @bot.message_handler(commands=["chapter"])
 def handle_chapter_command(message: telebot.types.Message) -> None:
     chat_id = message.chat.id
@@ -300,24 +299,21 @@ def handle_chapter_command(message: telebot.types.Message) -> None:
     )
 
 
-# ── /help ──────────────────────────────────────────────────────────────────────
 @bot.message_handler(commands=["help"])
 def handle_help(message: telebot.types.Message) -> None:
     bot.send_message(message.chat.id, HELP_TEXT, parse_mode="HTML")
 
 
-# ── /examples ──────────────────────────────────────────────────────────────────
 @bot.message_handler(commands=["examples"])
 def handle_examples(message: telebot.types.Message) -> None:
     bot.send_message(message.chat.id, EXAMPLES_TEXT, parse_mode="HTML")
 
 
-# ── Inline button callbacks ────────────────────────────────────────────────────
 @bot.callback_query_handler(func=lambda call: call.data.startswith("lang:"))
 def handle_language_pick(call: telebot.types.CallbackQuery) -> None:
-    chat_id  = call.message.chat.id
-    lang     = call.data.split(":")[1]
-    session  = get_session(chat_id)
+    chat_id   = call.message.chat.id
+    lang      = call.data.split(":")[1]
+    session   = get_session(chat_id)
     session["lang"] = lang
     lang_info = LANGUAGES[lang]
     bot.answer_callback_query(call.id, f"Language set to {lang_info['label']}")
@@ -364,11 +360,6 @@ def handle_chapter_pick(call: telebot.types.CallbackQuery) -> None:
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("mismatch:"))
 def handle_mismatch_decision(call: telebot.types.CallbackQuery) -> None:
-    """
-    Handles the teacher's decision when a chapter mismatch is detected.
-    mismatch:switch:<n> → permanently switch to detected chapter and answer
-    mismatch:keep:<n>   → answer using currently selected chapter, no switch
-    """
     chat_id = call.message.chat.id
     session = get_session(chat_id)
     pending = session.get("pending")
@@ -378,14 +369,13 @@ def handle_mismatch_decision(call: telebot.types.CallbackQuery) -> None:
         bot.answer_callback_query(call.id, "Session expired. Please ask your question again.")
         return
 
-    parts    = call.data.split(":")
-    decision = parts[1]   # "switch" or "keep"
+    parts     = call.data.split(":")
+    decision  = parts[1]
     chapter_n = int(parts[2])
 
     bot.answer_callback_query(call.id)
 
     if decision == "switch":
-        # Permanently switch session to the detected chapter
         new_chapter = get_chapter_by_number(chapter_n)
         session["chapter"] = new_chapter
         title = get_title(new_chapter, lang)
@@ -397,7 +387,6 @@ def handle_mismatch_decision(call: telebot.types.CallbackQuery) -> None:
         )
         chapter_to_use = new_chapter
     else:
-        # Keep the currently selected chapter
         chapter_to_use = pending["selected"]
         bot.edit_message_text(
             chat_id=chat_id,
@@ -406,19 +395,16 @@ def handle_mismatch_decision(call: telebot.types.CallbackQuery) -> None:
             parse_mode="HTML",
         )
 
-    # Clear pending state
     session["pending"] = None
-
-    # Now call Gemini and respond
     bot.send_chat_action(chat_id, "typing")
+
     try:
         call_gemini_and_respond(chat_id, pending["query"], chapter_to_use, lang)
     except Exception as e:
         logger.error("Error after mismatch decision: %s", e, exc_info=True)
-        bot.send_message(chat_id, "⚠️ AI is busy right now. Please try again in a moment.")
+        bot.send_message(chat_id, "⚠️ Something went wrong. Please try again.")
 
 
-# ── Message handler ────────────────────────────────────────────────────────────
 @bot.message_handler(func=lambda message: True)
 def handle_message(message: telebot.types.Message) -> None:
     chat_id    = message.chat.id
@@ -434,7 +420,6 @@ def handle_message(message: telebot.types.Message) -> None:
         user_query,
     )
 
-    # Guard: no chapter selected yet
     if chapter is None:
         lang_info = LANGUAGES[lang]
         bot.send_message(
@@ -445,16 +430,9 @@ def handle_message(message: telebot.types.Message) -> None:
         )
         return
 
-    # ── Mismatch detection ──
-    # Score the query against all chapters to see if a different chapter
-    # is a better match than the currently selected one
+    # Mismatch detection
     detected = _find_chapter_by_keywords(user_query)
-
-    if (
-        detected is not None
-        and detected["chapter"] != chapter["chapter"]
-    ):
-        # Mismatch found — store pending state and ask teacher what to do
+    if detected is not None and detected["chapter"] != chapter["chapter"]:
         session["pending"] = {
             "query":    user_query,
             "selected": chapter,
@@ -462,31 +440,63 @@ def handle_message(message: telebot.types.Message) -> None:
         }
         detected_title = get_title(detected, lang)
         selected_title = get_title(chapter, lang)
-
         bot.send_message(
             chat_id,
             f"⚠️ Your question seems to be about "
             f"<b>Chapter {detected['chapter']}: {detected_title}</b>, "
             f"but you have <b>Chapter {chapter['chapter']}: {selected_title}</b> selected.\n\n"
-            f"What would you like me to do?",
+            f"Would you like to switch chapters, or do you have a question on "
+            f"<b>Chapter {chapter['chapter']}: {selected_title}</b>?",
             parse_mode="HTML",
             reply_markup=mismatch_keyboard(detected["chapter"], chapter["chapter"]),
         )
         return
 
-    # ── No mismatch — answer normally ──
     bot.send_chat_action(chat_id, "typing")
     try:
         call_gemini_and_respond(chat_id, user_query, chapter, lang)
     except Exception as e:
         logger.error("Error handling message: %s", e, exc_info=True)
-        bot.reply_to(
-            message,
-            "⚠️ Something went wrong. Please try again in a moment.",
-        )
+        bot.reply_to(message, "⚠️ Something went wrong. Please try again.")
+
+
+# ── Flask webhook routes ───────────────────────────────────────────────────────
+@app.route("/webhook", methods=["POST"])
+def webhook() -> tuple:
+    """
+    Receives updates from Telegram and passes them to the bot.
+    Telegram sends a JSON payload to this endpoint for every message.
+    """
+    if request.headers.get("content-type") != "application/json":
+        abort(403)
+
+    json_data = request.get_data(as_text=True)
+    update    = Update.de_json(json_data)
+    bot.process_new_updates([update])
+    return "", 200
+
+
+@app.route("/set_webhook", methods=["GET"])
+def set_webhook() -> str:
+    """
+    Call this endpoint once after deployment to register the webhook with Telegram.
+    Visit: https://YOUR-CLOUD-RUN-URL/set_webhook
+    """
+    webhook_url = f"{WEBHOOK_URL}/webhook"
+    bot.remove_webhook()
+    result = bot.set_webhook(url=webhook_url)
+    if result:
+        return f"✅ Webhook set to: {webhook_url}", 200
+    return "❌ Failed to set webhook. Check your WEBHOOK_URL variable.", 500
+
+
+@app.route("/health", methods=["GET"])
+def health() -> tuple:
+    """Health check endpoint for Cloud Run."""
+    return {"status": "ok", "model": GEMINI_MODEL}, 200
 
 
 # ── Entry point ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    logger.info("🚀 TeachClear bot running (model: %s)...", GEMINI_MODEL)
-    bot.infinity_polling()
+    logger.info("🚀 TeachClear webhook server starting on port %s...", PORT)
+    app.run(host="0.0.0.0", port=PORT)

@@ -1,7 +1,15 @@
 # TeachClear — Python dependencies
 # Install with: pip install -r requirements.txt
 
-pyTelegramBotAPI
-python-dotenv
-google-genai
+# Telegram bot framework
+pyTelegramBotAPI>=4.18.0
 
+# Google Gemini API
+google-genai>=0.8.0
+
+# Web server for webhook mode
+flask>=3.0.0
+gunicorn>=21.2.0
+
+# Environment variable loader
+python-dotenv>=1.0.0
